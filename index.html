@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            base: '#0A0F1E',
+            glowPurple: '#7C3AED',
+            glowPink: '#EC4899',
+            glowCyan: '#06B6D4',
+            glowAmber: '#F59E0B',
+            glowGreen: '#10B981'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(6,182,212,0.12), transparent 24%),
+        radial-gradient(circle at bottom center, rgba(236,72,153,0.10), transparent 30%),
+        #0A0F1E;
+      color: white;
+      min-height: 100vh;
+    }
+    .glass-card {
+      position: relative;
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 50px rgba(2, 6, 23, 0.42);
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(236,72,153,0.85), rgba(6,182,212,0.85));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+    .nav-pill { transition: all 0.22s ease; border: 1px solid transparent; }
+    .nav-pill.active {
+      color: white;
+      border-color: rgba(236,72,153,0.35);
+      background: linear-gradient(135deg, rgba(124,58,237,0.16), rgba(236,72,153,0.14));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 6px 18px rgba(124,58,237,0.10);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body class="bg-base antialiased">
+  <div class="mx-auto max-w-[1800px] px-4 py-6 sm:px-6 xl:px-10 2xl:px-12">
+    <header class="glass-card gradient-border rounded-[28px] px-4 py-4 sm:px-6">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex items-center gap-4">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-glowPurple via-glowPink to-glowCyan">
+            <span class="text-lg font-bold">BO</span>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">Premium Money System</p>
+            <h1 class="text-xl font-semibold tracking-tight sm:text-2xl">Budget OS</h1>
+          </div>
+        </div>
+        <nav class="glass-card rounded-full border border-white/10 p-1.5">
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="nav-pill active rounded-full px-4 py-2 text-sm font-medium text-white/70" data-tab="dashboard">Dashboard</button>
+            <button class="nav-pill rounded-full px-4 py-2 text-sm font-medium text-white/70" data-tab="transactions">Transactions</button>
+            <button class="nav-pill rounded-full px-4 py-2 text-sm font-medium text-white/70" data-tab="recurring">Recurring</button>
+            <button class="nav-pill rounded-full px-4 py-2 text-sm font-medium text-white/70" data-tab="income">Income</button>
+            <button class="nav-pill rounded-full px-4 py-2 text-sm font-medium text-white/70" data-tab="savings">Savings</button>
+            <button class="nav-pill rounded-full px-4 py-2 text-sm font-medium text-white/70" data-tab="categories">Categories</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="mt-6 space-y-6">
+      <section id="dashboard" class="tab-panel active space-y-6">
+        <div class="grid gap-4 xl:grid-cols-12">
+          <div class="glass-card gradient-border rounded-[28px] p-5 xl:col-span-8">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <p class="text-xs uppercase tracking-[0.3em] text-white/45">Aperçu</p>
+                <h2 class="mt-2 text-2xl font-semibold tracking-tight">Ton système budget, simplifié</h2>
+              </div>
+              <span class="rounded-full bg-glowGreen/10 px-3 py-1 text-xs text-glowGreen">v1 shell prêt</span>
+            </div>
+            <div class="mt-6 grid gap-4 md:grid-cols-4">
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="text-xs uppercase tracking-[0.25em] text-white/40">Balance</p><p class="mt-3 text-2xl font-semibold text-glowGreen">$0</p><p class="mt-2 text-sm text-white/45">Starting point</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="text-xs uppercase tracking-[0.25em] text-white/40">Expenses</p><p class="mt-3 text-2xl font-semibold text-glowAmber">$0</p><p class="mt-2 text-sm text-white/45">This month</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="text-xs uppercase tracking-[0.25em] text-white/40">Income</p><p class="mt-3 text-2xl font-semibold text-glowCyan">$0</p><p class="mt-2 text-sm text-white/45">This month</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="text-xs uppercase tracking-[0.25em] text-white/40">Savings</p><p class="mt-3 text-2xl font-semibold text-glowPurple">$0</p><p class="mt-2 text-sm text-white/45">Goals progress</p></div>
+            </div>
+          </div>
+          <div class="glass-card gradient-border rounded-[28px] p-5 xl:col-span-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-white/45">Cashflow</p>
+            <div class="mt-6 rounded-[24px] border border-white/10 bg-white/[0.02] p-4">
+              <canvas id="cashflowChart" height="180"></canvas>
+            </div>
+          </div>
+          <div class="glass-card gradient-border rounded-[28px] p-5 xl:col-span-6">
+            <p class="text-xs uppercase tracking-[0.3em] text-white/45">Budget pillars</p>
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Transactions</h3><p class="mt-2 text-sm text-white/55">Toutes les dépenses et entrées d’argent au même endroit.</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Recurring</h3><p class="mt-2 text-sm text-white/55">Abonnements, bills, charges fixes et automatisées.</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Income</h3><p class="mt-2 text-sm text-white/55">Paychecks, side income et rentrées prévues.</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Savings Goals</h3><p class="mt-2 text-sm text-white/55">Emergency fund, vacances, projets et objectifs.</p></div>
+            </div>
+          </div>
+          <div class="glass-card gradient-border rounded-[28px] p-5 xl:col-span-6">
+            <p class="text-xs uppercase tracking-[0.3em] text-white/45">Roadmap</p>
+            <div class="mt-6 space-y-3">
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="font-medium">Step 1</p><p class="mt-1 text-sm text-white/55">Shell premium inspiré de ton ancien système.</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="font-medium">Step 2</p><p class="mt-1 text-sm text-white/55">Connexion des données réelles et logique par période.</p></div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="font-medium">Step 3</p><p class="mt-1 text-sm text-white/55">Dashboard premium, projections et objectifs d’épargne.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="transactions" class="tab-panel">
+        <div class="glass-card gradient-border rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-white/45">Transactions</p>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Suivi complet des mouvements</h2>
+          <div class="mt-6 overflow-x-auto rounded-[24px] border border-white/10 bg-white/[0.02] p-4">
+            <table class="min-w-full text-sm">
+              <thead><tr class="text-left text-white/45"><th class="pb-3 pr-6">Date</th><th class="pb-3 pr-6">Category</th><th class="pb-3 pr-6">Amount</th><th class="pb-3 pr-6">Type</th><th class="pb-3">Description</th></tr></thead>
+              <tbody><tr><td class="py-3 text-white/60">-</td><td class="py-3 text-white/60">-</td><td class="py-3 text-white/60">-</td><td class="py-3 text-white/60">-</td><td class="py-3 text-white/60">Prêt pour les vraies données</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="recurring" class="tab-panel">
+        <div class="glass-card gradient-border rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-white/45">Recurring</p>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Dépenses récurrentes</h2>
+          <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Bills</h3><p class="mt-2 text-sm text-white/55">Internet, téléphone, abonnements.</p></div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Subscriptions</h3><p class="mt-2 text-sm text-white/55">Prime, Disney+, Apple Music, etc.</p></div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Forecast</h3><p class="mt-2 text-sm text-white/55">Charges fixes prévues sur le cycle.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="income" class="tab-panel">
+        <div class="glass-card gradient-border rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-white/45">Income</p>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Entrées d’argent</h2>
+          <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="text-sm font-medium">Paycheck 1</p><p class="mt-2 text-white/55">Prévu</p></div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><p class="text-sm font-medium">Paycheck 2</p><p class="mt-2 text-white/55">Prévu</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="savings" class="tab-panel">
+        <div class="glass-card gradient-border rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-white/45">Savings Goals</p>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Objectifs d’épargne</h2>
+          <div class="mt-6 grid gap-4 md:grid-cols-2">
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Emergency Fund</h3><div class="mt-3 h-2 rounded-full bg-white/10"><div class="h-2 w-1/4 rounded-full bg-glowGreen"></div></div></div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><h3 class="font-semibold">Holiday</h3><div class="mt-3 h-2 rounded-full bg-white/10"><div class="h-2 w-1/5 rounded-full bg-glowPurple"></div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="categories" class="tab-panel">
+        <div class="glass-card gradient-border rounded-[28px] p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-white/45">Categories</p>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Règles et catégories</h2>
+          <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">Groceries</div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">Transport</div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">Bills</div>
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">Savings</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    var buttons = document.querySelectorAll('[data-tab]');
+    var panels = document.querySelectorAll('.tab-panel');
+    function activateTab(tabId) {
+      for (var i = 0; i < buttons.length; i += 1) {
+        buttons[i].classList.toggle('active', buttons[i].getAttribute('data-tab') === tabId);
+      }
+      for (var j = 0; j < panels.length; j += 1) {
+        panels[j].classList.toggle('active', panels[j].id === tabId);
+      }
+    }
+    for (var i = 0; i < buttons.length; i += 1) {
+      buttons[i].addEventListener('click', function () { activateTab(this.getAttribute('data-tab')); });
+    }
+    new Chart(document.getElementById('cashflowChart'), {
+      type: 'line',
+      data: {
+        labels: ['W1', 'W2', 'W3', 'W4'],
+        datasets: [{
+          data: [1200, 980, 1110, 890],
+          borderColor: '#7C3AED',
+          backgroundColor: 'rgba(124,58,237,0.12)',
+          fill: true,
+          tension: 0.35,
+          pointBackgroundColor: '#EC4899',
+          pointBorderWidth: 0,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: 'rgba(255,255,255,0.45)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: 'rgba(255,255,255,0.45)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
